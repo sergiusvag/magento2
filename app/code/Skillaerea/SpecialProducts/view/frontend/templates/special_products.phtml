@@ -1,0 +1,19 @@
+<?php
+        $productCollection = $this->getProductCollection();
+        foreach ($productCollection as $product)
+        {
+            $imageUrl = $this->helper('Magento\Catalog\Helper\Image')
+                             ->init($product, 'product_base_image')
+                             ->constrainOnly(true)
+                             ->keepAspectRatio(true)
+                             ->keepTransparency(true)
+                             ->keepFrame(false)
+                             ->getUrl();
+            ?>
+            <a href="<?php echo $product->getUrl() ?>">
+                <img src='<?php echo $imageUrl ?>' alt="<?php echo $product->getName() ?>">
+
+            </a>
+<?php
+        } ?>
+

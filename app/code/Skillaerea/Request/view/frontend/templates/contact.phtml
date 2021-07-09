@@ -1,0 +1,154 @@
+<section>
+    <head>
+        <meta charset="UTF-8">
+        <title>Contact Form</title>
+    </head>
+    <body>
+        <form id="contact_form_data" name="contact_form_data">
+            <p class="contact_field">First Name</p>
+            <div class="contact_input">
+                <input type="text" id="name" name="name" value="Sergey"/>
+            </div>
+            <div class="error_message">
+                <div class="name_error_break"><br></div>
+                <div class ="name_error" id="name_error"></div>
+            </div>
+
+            <p class="contact_field">Email</p>
+            <div class="contact_input">
+                <input type="text" id="email" name="email" value="Sergey@test.com"/>
+            </div>
+            <div class="error_message">
+                <div class="email_error_break"><br></div>
+                <div class ="email_error" id="email_error"></div>
+            </div>
+
+            <p class="contact_field">Message Box</p>
+            <div class="contact_input_message">
+                <textarea id="message" name="message">a message for testing</textarea>
+            </div>
+            <div class="error_message">
+                <div class="message_error_break"><br></div>
+                <div class ="message_error" id="message_error"></div>
+            </div>
+
+            <p class="contact_field">Age</p>
+            <select id="age" name="age">
+                <option value="Test">Test</option>
+                <option value="">No selection</option>
+                <option value="20-30">20-30</option>
+                <option value="30-40">30-40</option>
+            </select>
+            <div class="error_message">
+                <div class="age_error_break"><br></div>
+                <div class ="age_error" id="age_error"></div>
+            </div>
+
+            <input type="file" id="doc" name="doc" />
+            <br>
+            <input type="submit" id="send_button"  name="send_button" value="Send">
+        </form>
+        <div class="all_valid_message" id="all_valid_message" style="display:none">
+            Thank you <br>
+            <div class="valid_field">
+                <div class="valid_name"></div>
+            </div>
+            We will contact you shortly by your email <br>
+            <div class="valid_field">
+                <div class="valid_email"></div>
+            </div>
+            We will take your age into consideration <br>
+            <div class="valid_field">
+                <div class="valid_age"></div>
+            </div>
+            We have saved your message <br>
+            <div class="valid_field">
+                <div class="valid_message"></div>
+            </div>
+
+            <div class="valid_file_message"></div>
+        </div>
+    </body>
+</section>
+
+<script>
+    require(['jquery'],function(){
+        jQuery(document).ready(function() {
+            jQuery(".all_valid_message").hide();
+            jQuery("#contact_form_data").submit(function(){
+                var name = jQuery("input[name='name']").val();
+                var email = jQuery("input[name='email']").val();
+                var message = jQuery("textarea#message").val();
+                var age = jQuery("#age option:selected").val();
+                var formData = new FormData(this);
+                var doc_object = document.getElementById("doc");
+                var doc = doc_object.files[0];
+                formData.append('doc', doc);
+                formData.append('name', name);
+                formData.append('email', email);
+                formData.append('message', message);
+                formData.append('age', age);
+                formData.append('target_directory', '/var/www/html/tmpfiles/');
+
+                var url = "<?php echo $block->getBaseUrl().'request/valid/valid/' ?>";
+                jQuery.ajax({
+                    url: url,
+                    type: "POST",
+                    data: formData,
+                    enctype: 'multipart/form-data',
+                    contentType: false,
+                    processData: false,
+                    showLoader: true,
+                    cache: false,
+                    success: function(response){
+                        var formResponse = jQuery.parseJSON(response.output);
+
+                        if(formResponse.error == false)
+                        {
+                            jQuery("#contact_form_data").hide();
+                            jQuery(".all_valid_message").show();
+                            showValidMessage();
+                            jQuery(".valid_file_message").text(formResponse.doc);
+
+                        } else {
+                            jQuery(".all_valid_message").hide();
+                            checkError(".name_error", ".name_error_break", (formResponse.name).error, (formResponse.name).error_message);
+                            checkError(".email_error", ".email_error_break", (formResponse.email).error, (formResponse.email).error_message);
+                            checkError(".message_error", ".message_error_break", (formResponse.message).error, (formResponse.message).error_message);
+                            checkError(".age_error", ".age_error_break", (formResponse.age).error, (formResponse.age).error_message);
+                        }
+                    }
+                });
+
+                function checkError (htmlErrorPlace, htmlErrorBreakPlace, responseError, responseErrorMessage)
+                {
+                    if (responseError == false)
+                    {
+                        jQuery(htmlErrorBreakPlace).show();
+                        jQuery(htmlErrorPlace).hide();
+                    } else {
+                        jQuery(htmlErrorBreakPlace).hide();
+                        jQuery(htmlErrorPlace).show();
+                        jQuery(htmlErrorPlace).text(responseErrorMessage);
+                    }
+                }
+
+                function showValidMessage()
+                {
+                    showValidField(".valid_name",name);
+                    showValidField(".valid_email",email);
+                    showValidField(".valid_age",age);
+                    showValidField(".valid_message",message);
+                }
+
+                function showValidField(validField, validText)
+                {
+                    jQuery(validField).show();
+                    jQuery(validField).text(validText);
+                }
+
+                return false;
+            });
+        });
+    });
+</script>

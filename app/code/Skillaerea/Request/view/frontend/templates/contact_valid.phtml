@@ -1,0 +1,31 @@
+<?php
+//Input variables
+$name = $_POST['name'];
+$email = $_POST['email'];
+$message = $_POST['message'];
+$age = $_POST['age'];
+
+$allValidMessage = 'Thank you <p class="valid_form">' . $name . '</p><br>
+                         We will contact you shortly by your email <p class="valid_form">' . $email . '</p><br>
+                         We will take your age into consideration <p class="valid_form">' . $age . '</p><br>
+                         We have saved your message:<br>
+                         <p class="valid_form">'
+    . $message . '</p>';
+
+$targetDirectory = "/var/www/html/tmpfiles/";
+$targetFileName = basename($_FILES["document"]["name"]);
+$targetFile = $targetDirectory . $targetFileName;
+$fileAttached = false;
+if ($targetFileName != "") {
+    if (move_uploaded_file($_FILES["document"]["tmp_name"], $targetFile)) {
+        $allValidMessage = $allValidMessage
+            . "The file was uploaded successfully";
+        $fileAttached = true;
+    } else {
+        $allValidMessage = $allValidMessage
+            . "Sorry, there was an error uploading your file.";
+    }
+}
+
+echo $allValidMessage;
+//Mage::dispatchEvent('contact_is_valid', array('is_attached' => $fileAttached, 'contact_name' => $name));

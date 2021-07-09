@@ -1,0 +1,75 @@
+<?php
+    $name = $block->getNameData();
+    $email = $block->getEmailData();
+    $message = $block->getMessageData();
+    $age = $block->getAgeData();
+
+    $doc = $block->getDocData();
+
+    $nameError = "The field must not be empty";
+    $emailError = "The field must not be empty";
+    $messageError = "The field must not be empty";
+    $ageError = "Please select your age.";
+
+    $response = array(
+        "error"=>false,
+        "doc"=>$doc,
+        "name"=>array("error"=>false, "error_message"=>""),
+        "email"=>array("error"=>false, "error_message"=>""),
+        "message"=>array("error"=>false, "error_message"=>""),
+        "age"=>array("error"=>false, "error_message"=>""),
+    );
+
+    function turnErrorOn(string $field, &$array)
+    {
+        $array["error"] = true;
+        $array[$field]["error"] = true;
+    }
+
+    if($name !== "")
+    {
+        if (preg_match("/^([a-zA-Z' ]+)$/", $name))
+        {
+            $nameError = '';
+        } else {
+            $nameError = 'Invalid name given.';
+            turnErrorOn("name", $response);
+        }
+    } else {
+        turnErrorOn("name", $response);
+    }
+    $response["name"]["error_message"] = $nameError;
+
+    if($email !== "")
+    {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL))
+        {
+            $emailError = '';
+        }
+        else
+        {
+            $emailError = "Invalid email format";
+            turnErrorOn("email", $response);
+        }
+    } else {
+        turnErrorOn("email", $response);
+    }
+    $response["email"]["error_message"] = $emailError;
+
+    if($message !== "")
+    {
+        $messageError = '';
+    } else {
+        turnErrorOn("message", $response);
+        $response["message"]["error_message"] = $messageError;
+    }
+
+    if($age !== "")
+    {
+        $ageError = '';
+    } else {
+        turnErrorOn("age", $response);
+        $response["age"]["error_message"] = $ageError;
+    }
+
+    echo json_encode($response);

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Skillaerea_Request::css/valid_form.css" />
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Skillaerea\Request\Block\Index"
+                   name="request_valid_valid"
+                   template="form_message.phtml" />
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,9 @@
+p.valid_form
+{
+    color: darkblue;
+}
+
+p.invalid_form
+{
+    color: darkred;
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add
+            id="Skillaerea_LocaleManager::skillaerea"
+            title="Skillaerea"
+            module="Skillaerea_LocaleManager"
+            sortOrder="51"
+            resource="Skillaerea_LocaleManager::skillaerea"
+        />
+        <add
+            id="Skillaerea_LocaleManager::localemanager"
+            title="Locale Manager"
+            module="Skillaerea_LocaleManager"
+            sortOrder="10"
+            action="skillaerea_localemanager/index/index"
+            resource="Skillaerea_LocaleManager::localemanager"
+            parent="Skillaerea_LocaleManager::skillaerea"
+        />
+    </menu>
+</config>

@@ -1,0 +1,159 @@
+<?php
+
+use \Skillaerea\LocaleManager\Block\Adminhtml\Manager as Block; ?>
+<form class="select-form" style="display:none" method="post" action="<?php echo $this->getUrl('*/*/index'); ?>">
+    <input name="form_key" type="hidden" value="<?= /* @escapeNotVerified */
+                                                    $block->getFormKey() ?>" />
+    <div class="select-container">
+        <div class="container-item">
+            <label for="keyword">
+                <?php echo __('Keyword'); ?>
+            </label>
+            <input type="text"
+                   name="keyword"
+                   value="<?php echo $this->getKeyword(); ?>"
+                   placeholder="<?php echo __('Keyword'); ?>">
+        </div>
+        <div class="container-item">
+            <label for="files"><?php echo __('Files'); ?></label>
+            <select id="files" name="files[]" multiple="multiple">
+                <?php foreach ($block->getFiles() as $moduleName => $module) { ?>
+                    <option <?php if (in_array($moduleName, $this->getFilterFiles())) : ?>selected="selected" <?php endif; ?>><?= $moduleName ?></option>
+                <?php } ?>
+            </select>
+        </div>
+
+        <div class="container-item">
+            <label for="dirs"><?php echo __('Directories'); ?></label>
+            <select id="directories" name="dirs[]" multiple="multiple">
+                <?php foreach ($block->getDirectories() as $directory) { ?>
+                    <option <?php if (in_array($directory, $this->getFilterDirs())) : ?>selected="selected" <?php endif; ?>><?= $directory ?></option>
+                <?php } ?>
+            </select>
+        </div>
+    </div>
+    <button><?php echo __('Search'); ?></button>
+</form>
+<script>
+    requirejs(['jquery', 'skillaereaMultiselect'], function($, select) {
+        jQuery(".popup_content").hide();
+
+        $('#files').multiselect({
+            selectedText: "# of # selected",
+            noneSelectedText: "Select a locale file",
+            selectedList: 1,
+            height: 210,
+            minWidth: 300
+        });
+        $('#directories').multiselect({
+            selectedText: "# of # selected",
+            noneSelectedText: "Select a directory",
+            selectedList: 1,
+            height: 210,
+            minWidth: 300
+        });
+        jQuery(".select-form").show();
+        jQuery(".table-manager").show();
+
+        window.localeManager = {
+            saveUrl: "<?php echo $this->getUrl('skillaerea_localemanager/index/save'); ?>",
+            object: {},
+            modal: {},
+            translate: $('#translate'),
+            source: $('#source'),
+            saveTranslate: function(modal) {
+                params = {
+                    'locale': $(this.object).data('locale'),
+                    'string': $(this.object).data('source'),
+                    'translate': this.translate.val()
+                };
+                $.ajax({
+                    url: this.saveUrl,
+                    data: params,
+                    success: function(result) {
+                        window.localeManager.object.textContent = params['translate'];
+                        $(window.localeManager.object).removeClass('bad warm good').addClass('edited');
+                        modal.closeModal();
+                    }
+                });
+            },
+            setObject: function(object) {
+                this.object = object;
+                this.source.val($('<textarea />').html(($(this.object).data('source'))).text());
+                //  this.translate.val(this.object.textContent);
+                this.translate.val($('<textarea />').html(($(this.object).data('translation'))).text());
+            }
+
+        };
+        $('td.popup').on('click', function(event) {
+            jQuery(".popup_content").show();
+            window.localeManager.setObject(this);
+        });
+    });
+</script>
+<div data-bind="mageInit: {
+        'Magento_Ui/js/modal/modal':{
+            'type': 'popup',
+            'title': 'Locale manager',
+            'trigger': 'td.popup',
+            'responsive': false,
+            'buttons': [{
+                text: 'Save',
+                class: 'action',
+                click: function () {
+                window.localeManager.saveTranslate(this);
+            }
+            }]
+        }}">
+    <div class="popup_content" style="display:none">
+        <div class="field text">
+            <label for="translate" class="label">
+                <span data-bind="text: 'Translation'"></span>
+            </label>
+            <div class="control">
+                <textarea cols="180" rows="4" id="translate" name="translate"></textarea>
+            </div>
+        </div>
+        <div class="field text">
+            <label for="source" class="label">
+                <span data-bind="text: 'Source:'"></span>
+            </label>
+            <div class="control">
+                <textarea disabled="true" cols="180" rows="4" id="source" name="source"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<table border="1" class="table-manager" style="display:none">
+    <tr>
+        <td width="5%"><?php echo __('File'); ?></td>
+        <td width="10%"><?php echo __('Key'); ?></td>
+        <?php foreach ($this->getLocales() as $locale) { ?>
+            <td width="10%"><?= $locale ?></td>
+        <?php } ?>
+    </tr>
+    <?php $grid = $block->getGrid(); ?>
+    <?php foreach ($grid as $key => $row) { ?>
+        <tr>
+            <td><?php echo $this->getSources($row); ?></td>
+            <td><?php echo $this->stripTags(html_entity_decode($key)); ?></td>
+            <?php foreach ($this->getLocales() as $locale) { ?>
+                <?php $translation = $this->getTranslated($row, $locale); ?>
+            <td class="popup <?php echo $this->getTranslationStatus($translation); ?>" data-locale="<?= $locale ?>" data-source="<?php echo htmlspecialchars($key); ?>" data-translation="<?php echo htmlspecialchars($translation); ?>" width="10%"><?php echo $this->stripTags(html_entity_decode($translation)); ?></td><?php } ?>
+        </tr>
+    <?php } ?>
+
+    <?php foreach ([Block::TRANSLATION_GOOD, Block::TRANSLATION_WARM, Block::TRANSLATION_BAD] as $type) { ?>
+        <tr>
+            <td class="<?= $type; ?>" colspan="2"><?php echo __('Total ' . $type); ?> </td>
+            <?php foreach ($this->getStats() as $key => $stat) { ?>
+                <?php if (array_sum($stat) > 0) : ?>
+                    <td class="<?= $type; ?>"><?php echo ($stat[$type]); ?> (<?php echo round($stat[$type] / array_sum($stat) * 100) ?>%) </td>
+                <?php else : ?>
+                    <td class="<?= $type; ?>"><?php echo ($stat[$type]); ?> (0%) </td>
+                <?php endif; ?>
+            <?php } ?>
+        </tr>
+    <?php } ?>
+
+</table>

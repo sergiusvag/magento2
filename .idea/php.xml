@@ -103,7 +103,6 @@
       <path value="$PROJECT_DIR$/vendor/vertex/sdk" />
       <path value="$PROJECT_DIR$/vendor/amzn/amazon-pay-sdk-php" />
       <path value="$PROJECT_DIR$/vendor/phpseclib/mcrypt_compat" />
-      <path value="$PROJECT_DIR$/vendor/phpseclib/bcmath_compat" />
       <path value="$PROJECT_DIR$/vendor/phpseclib/phpseclib" />
       <path value="$PROJECT_DIR$/vendor/allure-framework/allure-codeception" />
       <path value="$PROJECT_DIR$/vendor/allure-framework/allure-php-api" />
@@ -567,6 +566,8 @@
       <path value="$PROJECT_DIR$/vendor/php-webdriver/webdriver" />
       <path value="$PROJECT_DIR$/vendor/google/recaptcha" />
       <path value="$PROJECT_DIR$/vendor/seld/phar-utils" />
+      <path value="$PROJECT_DIR$/vendor/mageplaza/module-core" />
+      <path value="$PROJECT_DIR$/vendor/mageplaza/magento-2-russian-language-pack" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3">

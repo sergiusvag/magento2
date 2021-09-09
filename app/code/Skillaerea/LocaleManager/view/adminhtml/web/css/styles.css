@@ -1,0 +1,44 @@
+.table-manager {
+    width: 100%;
+    border: 1px solid #000;
+}
+
+.table-manager td {
+    border: 1px solid #000;
+    padding: 2px;
+    max-width: 200px;
+    word-wrap: break-word;
+}
+
+span.action-add.mselect-button-add {
+    display: none !important;
+}
+
+div.container-item {
+    max-width: 30%;
+    display: block;
+    float: left;
+    padding: 10px;
+}
+
+li.ui-multiselect-all {
+    list-style: none;
+}
+
+.table-manager td.bad {
+    background-color: #FFCCCC;
+}
+
+.table-manager td.good {
+    background-color: #CCFFCC;
+}
+
+.table-manager td.warm {
+    background-color: #FFFFCC;
+}
+.table-manager td.edited {
+    background-color: #CCCCFD;
+}
+.ui-multiselect-header li {
+    list-style: none;
+}

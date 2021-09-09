@@ -4114,6 +4114,25 @@
       ),
       'reference' => '6ad81500d33f085ca2391f2b59e37bd34203b29b',
     ),
+    'mageplaza/magento-2-russian-language-pack' => 
+    array (
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
+      'aliases' => 
+      array (
+        0 => '9999999-dev',
+      ),
+      'reference' => 'a63c15bfc848c6deb44e0f1ffe829148731c918a',
+    ),
+    'mageplaza/module-core' => 
+    array (
+      'pretty_version' => '1.4.11',
+      'version' => '1.4.11.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '45cf1e6a79ca82acc1fe82372bbb4e83ea308b6b',
+    ),
     'mikey179/vfsstream' => 
     array (
       'pretty_version' => 'v1.6.8',
@@ -4361,15 +4380,6 @@
       ),
       'reference' => '994ecccd8f3283ecf5ac33254543eb0ac946d525',
     ),
-    'phpseclib/bcmath_compat' => 
-    array (
-      'pretty_version' => '1.0.6',
-      'version' => '1.0.6.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'f6f03d3af2ef95fc35b30abdd29f20ee11276a65',
-    ),
     'phpseclib/mcrypt_compat' => 
     array (
       'pretty_version' => '1.0.8',
@@ -4548,8 +4558,8 @@
     array (
       'provided' => 
       array (
-        0 => '1.0',
-        1 => '1.0.0',
+        0 => '1.0.0',
+        1 => '1.0',
       ),
     ),
     'ralouphie/getallheaders' => 
